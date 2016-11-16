@@ -21,15 +21,13 @@ const btnLogOut = document.getElementById("btnLogOut");
 const btnNewCustomer = document.getElementById("btnNewCustomer");
 const btnReadCustomer = document.getElementById("btnReadCustomer");
 const btnAddCustomer = document.getElementById("btnAddCustomer");
+const columns = ["이름", "가입일", "주소", "전화번호"];
 var updateCustomerId = "";
 // ["이름", "나이", "성별", "보청기 모델", "보청기 구입시기", "배터리 구입시기", "복지카드 유무", "주소", "전화번호", "수정"];
-const columns = ["이름", "가입일", "주소", "전화번호"];
-var currentDate;
+var now = new Date();
+var currentDate = now.getFullYear() + "/" + now.getMonth() + "/" + now.getDate();;
 
 btnNewCustomer.addEventListener('click', e => {
-    var now = new Date();
-    currentDate = now.getFullYear() + "/" + now.getMonth() + "/" + now.getDate();
-
     resetDialog();
 
     window.location='#open';
@@ -59,7 +57,6 @@ btnReadCustomer.addEventListener('click', e => {
             bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
             bodyRow.insertCell(4).innerHTML = '<button onclick="deleteCustomer(\'' + data.key + '\')">DELETE</button>';
 
-
             customerData.hearingAid.forEach(function(hearingAidData, index) {
                 var oneYearTableRow = oneYearTable.insertRow(oneYearTable.length);
                 oneYearTableRow.insertCell(0).innerHTML = customerData.name;
@@ -67,9 +64,6 @@ btnReadCustomer.addEventListener('click', e => {
                 oneYearTableRow.insertCell(2).innerHTML = hearingAidData.date;
                 oneYearTableRow.insertCell(3).innerHTML = hearingAidData.model;
             });
-
-
-
         });
         sorttable.makeSortable(customerListTable);
     });
@@ -161,7 +155,6 @@ var updateCustomer = function(customerId) {
 
     customerRef.child(customerId).on("value", function(snapshot) {
         var customerData = snapshot.val();
-        console.log(customerData);
         customerName.value = customerData.name;
         customerAge.value = customerData.age;
         if(customerData.sex == "Male") {
