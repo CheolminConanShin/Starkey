@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="../lib/sorttable.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/CustomerList.css">
+</head>
+<body>
+<div id="customerListContent">
+    <h3>고객 리스트</h3>
+    <table id="customerList" class="sortable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+    <button id="btnNewCustomer">새 고객입력</button>
+    <button id="btnReadCustomer">고객 조회</button>
+    <button id="btnLogOut">로그 아웃</button>
+</div>
+<div id="noticeContent">
+    <div id="oneYear">
+        <h3>1년차 고객</h3>
+        <table>
+        </table>
+    </div>
+    <div id="twoYear">
+        <table>
+        </table>
+    </div>
+    <div id="fiveYear">
+        <table>
+        </table>
+    </div>
+</div>
+
+<!-- New Customer Dialog -->
+<div id="open" class="modalDialog">
+    <div>
+        <a href="#close" title="Close" class="close">X</a>
+        <table>
+            <p>
+                <h>신규 고객 추가</h>
+            </p>
+            <p>
+                <label>이름</label>
+                <input type="text" name="customerName"/>
+            </p>
+            <p>
+                <label>나이</label>
+                <input type="text" name="customerAge"/>
+            </p>
+            <p>
+                <label>성별</label>
+                남<input type="radio" name="customerSex" value="Male" checked="checked"/>
+                여<input type="radio" name="customerSex" value="Female"/>
+            </p>
+            <p>
+                <label>보청기</label>
+                <button onclick="addEarAid('left')">+좌</button>
+                <button onclick="addEarAid('right')">+우</button>
+            </p>
+            <p id="batteryOrderDate">
+                <label>배터리 구입일</label>
+                <input type="text" name="batteryOrderDate"/>
+            </p>
+            <p>
+                <label>복지카드 유무</label>
+                Yes<input type="radio" name="cardYN" value="Yes" checked="checked"/>
+                No<input type="radio" name="cardYN" value="No"/>
+            </p>
+            <p>
+                <label>주소</label>
+                <input type="text" name="address"/>
+            </p>
+            <p>
+                <label>전화번호</label>
+                <input type="text" name="phoneNumber"/>
+            </p>
+            <p>
+                <label>가입일</label>
+                <input type="text" name="registrationDate"/>
+            </p>
+            <button id="btnAddCustomer" isUpdate="false">저장</button>
+        </table>
+    </div>
+</div>
+</body>
+<script src="../js/CustomerList.js"></script>
+</html>
+
