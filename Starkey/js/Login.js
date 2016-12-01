@@ -7,9 +7,9 @@ const config = {
 firebase.initializeApp(config);
 
 // Get Elements
-const txtEmail = document.getElementById('txtEmail');
-const txtPassword = document.getElementById('txtPassword');
-const btnLogin = document.getElementById('btnLogin');
+var txtEmail = document.getElementById('txtEmail');
+var txtPassword = document.getElementById('txtPassword');
+var btnLogin = document.getElementById('btnLogin');
 
 // Login Event
 btnLogin.addEventListener('click', e => {
@@ -23,9 +23,9 @@ btnLogin.addEventListener('click', e => {
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
 	if(firebaseUser) {
-		alert("Welcome " + firebaseUser.email);
-		window.location = "CustomerList.html";
+		location.replace("/html/CustomerList.html");
 	} else {
 		console.log('not logged in');
 	}
+	return false;
 });

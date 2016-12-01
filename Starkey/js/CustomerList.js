@@ -10,42 +10,114 @@ firebase.auth().onAuthStateChanged(function(currentUser) {
     if (currentUser) {
         console.log("Welcome " + currentUser.email);
     } else {
-        alert("로그인 해 주세요");
-        window.location="Login.html";
+//        alert("로그인 해 주세요");
+        location.replace("/html/Login.html");
     }
 });
 
 // Elements
-const customerRef = firebase.database().ref('customers/');
-const btnLogOut = document.getElementById("btnLogOut");
-const btnNewCustomer = document.getElementById("btnNewCustomer");
-const btnReadCustomer = document.getElementById("btnReadCustomer");
-const btnAddCustomer = document.getElementById("btnAddCustomer");
-const columns = ["이름", "가입일", "주소", "전화번호"];
+let customerRef = firebase.database().ref('customers/');
+let btnLogOut = document.getElementById("btnLogOut");
+let btnNewCustomer = document.getElementById("btnNewCustomer");
+let btnReadCustomer = document.getElementById("btnReadCustomer");
+let btnAddCustomer = document.getElementById("btnAddCustomer");
+let btnDeleteCustomer = document.getElementById("btnDeleteCustomer");
+
+let customerListTable = document.getElementById("customerList");
+let oneYearTable = document.getElementById("oneYear").getElementsByTagName("table")[0];
+let twoYearTable = document.getElementById("twoYear").getElementsByTagName("table")[0];
+let fiveYearTable = document.getElementById("fiveYear").getElementsByTagName("table")[0];
+
+const columns = ["이름", "가입일", "주소", "집 전화번호", "핸드폰 번호"];
+const yearColumns = ["이름", "집 전화번호", "핸드폰 번호", "최근 보청기 구입일", "모델명"];
 var updateCustomerId = "";
 // ["이름", "나이", "성별", "보청기 모델", "보청기 구입시기", "배터리 구입시기", "복지카드 유무", "주소", "전화번호", "수정"];
-var now = new Date();
-var currentDate = now.getFullYear() + "/" + now.getMonth() + "/" + now.getDate();;
+let now = new Date();
+let nowYear = now.getFullYear();
+let nowMonth = (now.getMonth()+1) <= 9 ? "0" + (now.getMonth()+1) : (now.getMonth()+1);
+let currentDate = nowYear + "/" + nowMonth + "/" + now.getDate();
+let before1YearDate = (nowMonth == 12 ? nowYear-0 : nowYear-1) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
+let before2YearDate = (nowMonth == 12 ? nowYear-1 : nowYear-2) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
+let before5YearDate = (nowMonth == 12 ? nowYear-4 : nowYear-5) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
+
+(function Constructor() {
+    var customerListTableHeader = customerListTable.getElementsByTagName("thead")[0];
+    var customerListTableTr = customerListTableHeader.insertRow(0);
+    columns.forEach(function(columnName, index) {
+        var th = document.createElement('th');
+        th.innerHTML = columnName;
+        customerListTableTr.appendChild(th);
+    });
+
+    var oneYearTableHeader = oneYearTable.getElementsByTagName("thead")[0];
+    var oneYearTableTr = oneYearTableHeader.insertRow(0);
+    yearColumns.forEach(function(columnName, index) {
+        var th = document.createElement('th');
+        th.innerHTML = columnName;
+        oneYearTableTr.appendChild(th);
+    });
+
+    var twoYearTableHeader = twoYearTable.getElementsByTagName("thead")[0];
+    var twoYearTableTr = twoYearTableHeader.insertRow(0);
+    yearColumns.forEach(function(columnName, index) {
+        var th = document.createElement('th');
+        th.innerHTML = columnName;
+        twoYearTableTr.appendChild(th);
+    });
+
+    var fiveYearTableHeader = fiveYearTable.getElementsByTagName("thead")[0];
+    var fiveYearTableTr = fiveYearTableHeader.insertRow(0);
+    yearColumns.forEach(function(columnName, index) {
+        var th = document.createElement('th');
+        th.innerHTML = columnName;
+        fiveYearTableTr.appendChild(th);
+    });
+}());
 
 btnNewCustomer.addEventListener('click', e => {
     resetDialog();
-
-    window.location='#open';
+    $("#dialogTitle")[0].innerHTML = "신규 고객 추가";
+    btnDeleteCustomer.disabled = true;
+    location.replace('#open');
 });
+
+var isEqualYearAndMonth = function(tableDate, purchaseDate) {
+    var tableDateYear = tableDate.split("/")[0];
+    var tableDateMonth = tableDate.split("/")[1];
+    var formattedPurchaseDate = formatDate(purchaseDate);
+    var purchaseDateYear = formattedPurchaseDate.split("/")[0];
+    var purchaseDateMonth = formattedPurchaseDate.split("/")[1];
+
+    return (tableDateYear == purchaseDateYear && tableDateMonth == purchaseDateMonth);
+}
+
+var formatDate = function(insertDate) {
+    if(insertDate == undefined || insertDate == "") return "";
+    var insertYear = insertDate.split("/")[0];
+    var insertMonth = insertDate.split("/")[1];
+    var insertDay = insertDate.split("/")[2];
+
+    var formattedMonth = insertMonth.length < 2 ? "0" + insertMonth : insertMonth;
+    var formattedDay = insertDay.length < 2 ? "0" + insertDay : insertDay;
+
+    return insertYear + "/" + formattedMonth + "/" + formattedDay;
+}
 
 btnReadCustomer.addEventListener('click', e => {
     customerRef.on('value', function(snapshot) {
-        var customerListTable = document.getElementById("customerList");
-        var oneYearTable = document.getElementById("oneYear").getElementsByTagName("table")[0];
+        document.getElementById("myInput").value = "";
 
-        customerListTable.innerHTML = "";
-        oneYearTable.innerHTML = "";
-        var customerListTableHeader = customerListTable.createTHead();
-        var customerListTableBody = customerListTable.createTBody();
-        var headerRow = customerListTableHeader.insertRow(0);
-        columns.forEach(function(columnName, index) {
-            headerRow.insertCell(index).innerHTML = columnName;
-        });
+        var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
+        customerListTableBody.innerHTML = "";
+
+        var oneYearTableBody = oneYearTable.getElementsByTagName("tbody")[0];
+        oneYearTableBody.innerHTML = "";
+
+        var twoYearTableBody = twoYearTable.getElementsByTagName("tbody")[0];
+        twoYearTableBody.innerHTML = "";
+
+        var fiveYearTableBody = fiveYearTable.getElementsByTagName("tbody")[0];
+        fiveYearTableBody.innerHTML = "";
 
         snapshot.forEach(function(data, index) {
             var bodyRow = customerListTableBody.insertRow(index);
@@ -55,23 +127,37 @@ btnReadCustomer.addEventListener('click', e => {
             bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
             bodyRow.insertCell(2).innerHTML = customerData.address;
             bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
-            bodyRow.insertCell(4).innerHTML = '<button onclick="deleteCustomer(\'' + data.key + '\')">DELETE</button>';
+            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
+//            bodyRow.insertCell(4).innerHTML = '<button onclick="deleteCustomer(\'' + data.key + '\')">DELETE</button>';
 
-            customerData.hearingAid.forEach(function(hearingAidData, index) {
-                var oneYearTableRow = oneYearTable.insertRow(oneYearTable.length);
-                oneYearTableRow.insertCell(0).innerHTML = customerData.name;
-                oneYearTableRow.insertCell(1).innerHTML = customerData.phoneNumber;
-                oneYearTableRow.insertCell(2).innerHTML = hearingAidData.date;
-                oneYearTableRow.insertCell(3).innerHTML = hearingAidData.model;
-            });
+            if(customerData.hearingAid != undefined){
+                customerData.hearingAid.forEach(function(hearingAidData, index) {
+                    var yearTableRow;
+                    if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
+                        yearTableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
+                        yearTableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
+                        yearTableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
+                    } else {
+                        return;
+                    }
+                    yearTableRow.insertCell(0).innerHTML = '<a href="#open" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+                    yearTableRow.insertCell(1).innerHTML = customerData.phoneNumber;
+                    yearTableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
+                    yearTableRow.insertCell(3).innerHTML = hearingAidData.date;
+                    yearTableRow.insertCell(4).innerHTML = hearingAidData.model;
+                });
+            }
         });
         sorttable.makeSortable(customerListTable);
+        $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
     });
 });
 
 btnLogOut.addEventListener('click', e => {
     const promise = firebase.auth().signOut();
-    window.location = "Login.html";
+    location.replace("/html/Login.html");
     promise.catch(e => console.log(e.message));
 });
 
@@ -80,6 +166,8 @@ btnAddCustomer.addEventListener('click', e => {
         obj[item.name] = item.value;
         return obj;
     }, {});
+
+    customerData.note = $('.note textarea')[0].value;
 
     var emptyFlag = false;
     var emptyMsg = "";
@@ -92,7 +180,7 @@ btnAddCustomer.addEventListener('click', e => {
                 emptyFlag = true;
                 emptyMsg = "빈 값이 존재합니다";
             }
-            customerData.hearingAid.push({"side" : this.getAttribute("side"), "model" : this.value, "date" : dateValue});
+            customerData.hearingAid.push({"side" : this.getAttribute("side"), "model" : this.value, "date" : formatDate(dateValue)});
         }
     });
 
@@ -102,7 +190,7 @@ btnAddCustomer.addEventListener('click', e => {
     }
 
     if(emptyFlag) {
-        alert(validation.msg);
+        alert(emptyMsg);
     } else {
         if(btnAddCustomer.getAttribute("isUpdate") == "false") {
             customerRef.push().set({
@@ -110,11 +198,13 @@ btnAddCustomer.addEventListener('click', e => {
                 age: customerData.customerAge,
                 sex : customerData.customerSex,
                 hearingAid: customerData.hearingAid,
-                batteryOrderDate: customerData.batteryOrderDate,
+                batteryOrderDate: formatDate(customerData.batteryOrderDate),
                 cardAvailability: customerData.cardYN,
                 address: customerData.address,
                 phoneNumber : customerData.phoneNumber,
-                registrationDate : customerData.registrationDate
+                mobilePhoneNumber : customerData.mobilePhoneNumber,
+                registrationDate : formatDate(customerData.registrationDate),
+                note : customerData.note
             });
         } else {
             var updates = {};
@@ -123,22 +213,41 @@ btnAddCustomer.addEventListener('click', e => {
                 age: customerData.customerAge,
                 sex : customerData.customerSex,
                 hearingAid: customerData.hearingAid,
-                batteryOrderDate: customerData.batteryOrderDate,
+                batteryOrderDate: formatDate(customerData.batteryOrderDate),
                 cardAvailability: customerData.cardYN,
                 address: customerData.address,
                 phoneNumber : customerData.phoneNumber,
-                registrationDate : customerData.registrationDate
+                mobilePhoneNumber : customerData.mobilePhoneNumber,
+                registrationDate : formatDate(customerData.registrationDate),
+                note : customerData.note
             };
             customerRef.update(updates);
         }
-        btnAddCustomer.setAttribute("isUpdate", "false");
-        window.location='#close';
-        btnReadCustomer.click();
-        alert("저장완료");
+        resetUpdateStatus();
+        alert("반영완료");
     }
 });
 
+btnDeleteCustomer.addEventListener('click', e => {
+   var confirmVal = confirm("정말 삭제하시겠습니까?");
+   if(confirmVal == true) {
+       customerRef.child(updateCustomerId).remove();
+       resetUpdateStatus();
+       alert("삭제완료");
+   } else {
+       resetUpdateStatus();
+   }
+});
+
+var resetUpdateStatus = function() {
+   btnAddCustomer.setAttribute("isUpdate", "false");
+   location.replace('#close');
+   updateCustomerId = "";
+}
+
 var updateCustomer = function(customerId) {
+    $("#dialogTitle")[0].innerHTML = "기족 고객 수정";
+    btnDeleteCustomer.disabled = false;
     resetDialog();
     btnAddCustomer.setAttribute("isUpdate", "true");
     updateCustomerId = customerId;
@@ -151,9 +260,11 @@ var updateCustomer = function(customerId) {
     var cardAvailabilityNo = document.getElementsByName("cardYN")[1];
     var address = document.getElementsByName("address")[0];
     var phoneNumber = document.getElementsByName("phoneNumber")[0];
+    var mobilePhoneNumber = document.getElementsByName("mobilePhoneNumber")[0];
     var registrationDate = document.getElementsByName("registrationDate")[0];
+    var note = $('.note textarea')[0];
 
-    customerRef.child(customerId).on("value", function(snapshot) {
+    customerRef.child(customerId).once("value").then(function(snapshot) {
         var customerData = snapshot.val();
         customerName.value = customerData.name;
         customerAge.value = customerData.age;
@@ -164,13 +275,17 @@ var updateCustomer = function(customerId) {
             customerSexMale.checked = false;
             customerSexFemale.checked = true;
         }
-        customerData.hearingAid.forEach(function(hearingAidData, index) {
-            var aidContent = addEarAid(hearingAidData.side)[0];
-            var aidModelName = aidContent.getElementsByTagName("input")[0];
-            var aidPurchaseDate = aidContent.getElementsByTagName("input")[1];
-            aidModelName.value = hearingAidData.model;
-            aidPurchaseDate.value = hearingAidData.date;
-        });
+
+        if(customerData.hearingAid != undefined){
+            customerData.hearingAid.forEach(function(hearingAidData, index) {
+                var aidContent = addEarAid(hearingAidData.side)[0];
+                var aidModelName = aidContent.getElementsByTagName("input")[0];
+                var aidPurchaseDate = aidContent.getElementsByTagName("input")[1];
+                aidModelName.value = hearingAidData.model;
+                aidPurchaseDate.value = hearingAidData.date;
+            });
+        }
+
         batteryOrderDate.value = customerData.batteryOrderDate;
         if(customerData.cardAvailability == "Yes") {
             cardAvailabilityYes.checked = true;
@@ -181,12 +296,10 @@ var updateCustomer = function(customerId) {
         }
         address.value = customerData.address;
         phoneNumber.value = customerData.phoneNumber;
+        mobilePhoneNumber.value = customerData.mobilePhoneNumber;
         registrationDate.value = customerData.registrationDate;
+        note.value = customerData.note;
     });
-}
-
-var deleteCustomer = function(customerId) {
-    customerRef.child(customerId).remove();
 }
 
 var deleteAidContent = function(component) {
@@ -224,6 +337,33 @@ var resetDialog = function() {
            inputTag.value = "";
         }
     });
+
+    $('.note textarea')[0].value = "";
+}
+
+var filterTable = function() {
+    var input, filter, table, tr, td, i;
+    input = document.getElementById("myInput");
+    filter = input.value;
+    table = document.getElementById("customerList");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        for (j = 0; j < 5; j++) {
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+                if (td.innerHTML.indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    break;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+    }
 }
 
 btnReadCustomer.click();
+
