@@ -17,9 +17,11 @@
             <h3>고객 리스트 (
                 <div id="customerCount"></div>명 )<input type="text" id="myInput" onkeyup="filterTable()" placeholder="검색어 입력">
             </h3>
-            <button id="btnNewCustomer">새 고객입력</button>
-            <button id="btnReadCustomer">고객 조회</button>
-            <button id="btnLogOut">로그 아웃</button>
+            <div class="buttonGroup">
+                <button id="btnNewCustomer" class="btn btn-primary">새 고객입력</button>
+                <button id="btnReadCustomer" class="btn btn-success">고객 조회</button>
+                <button id="btnLogOut" class="btn btn-danger">로그 아웃</button>
+            </div>
             <table id="customerList" class="sortable">
                 <thead></thead>
                 <tbody></tbody>
@@ -107,8 +109,8 @@
                         <textarea rows="4" colspan="4"></textarea>
                     </p>
                 </div>
-                <button id="btnAddCustomer" isUpdate="false">저장</button>
-                <button id="btnDeleteCustomer">삭제</button>
+                <button id="btnAddCustomer" isUpdate="false" class="btn btn-primary">저장</button>
+                <button id="btnDeleteCustomer" class="btn btn-danger">삭제</button>
             </table>
         </div>
     </div>

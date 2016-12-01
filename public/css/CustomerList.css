@@ -50,6 +50,10 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
     counter-reset: rowNumber-1;
 }
 
+.buttonGroup {
+	margin-bottom: 10px;
+}
+
 #customerListContent tr {
     counter-increment: rowNumber;
 }

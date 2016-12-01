@@ -1,4 +1,8 @@
 // Firebase Config Setting
+const columns = ["이름", "가입일", "주소", "집 전화번호", "핸드폰 번호"];
+const yearColumns = ["이름", "집 전화번호", "핸드폰 번호", "최근 보청기 구입일", "모델명"];
+// ["이름", "나이", "성별", "보청기 모델", "보청기 구입시기", "배터리 구입시기", "복지카드 유무", "주소", "전화번호", "수정"];
+
 const config = {
     apiKey: "AIzaSyAAjby47cHjqBOCPy4PzThrfbeSmUnk9eU",
     authDomain: "starkey.firebaseapp.com",
@@ -15,23 +19,15 @@ firebase.auth().onAuthStateChanged(function(currentUser) {
     }
 });
 
-// Elements
 let customerRef = firebase.database().ref('customers/');
-let btnLogOut = document.getElementById("btnLogOut");
-let btnNewCustomer = document.getElementById("btnNewCustomer");
-let btnReadCustomer = document.getElementById("btnReadCustomer");
-let btnAddCustomer = document.getElementById("btnAddCustomer");
-let btnDeleteCustomer = document.getElementById("btnDeleteCustomer");
 
+// Dom Elements
 let customerListTable = document.getElementById("customerList");
 let oneYearTable = document.getElementById("oneYear").getElementsByTagName("table")[0];
 let twoYearTable = document.getElementById("twoYear").getElementsByTagName("table")[0];
 let fiveYearTable = document.getElementById("fiveYear").getElementsByTagName("table")[0];
 
-const columns = ["이름", "가입일", "주소", "집 전화번호", "핸드폰 번호"];
-const yearColumns = ["이름", "집 전화번호", "핸드폰 번호", "최근 보청기 구입일", "모델명"];
-var updateCustomerId = "";
-// ["이름", "나이", "성별", "보청기 모델", "보청기 구입시기", "배터리 구입시기", "복지카드 유무", "주소", "전화번호", "수정"];
+// Global Variables
 let now = new Date();
 let nowYear = now.getFullYear();
 let nowMonth = (now.getMonth()+1) <= 9 ? "0" + (now.getMonth()+1) : (now.getMonth()+1);
@@ -40,6 +36,14 @@ let before1YearDate = (nowMonth == 12 ? nowYear-0 : nowYear-1) + "/" + (nowMonth
 let before2YearDate = (nowMonth == 12 ? nowYear-1 : nowYear-2) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
 let before5YearDate = (nowMonth == 12 ? nowYear-4 : nowYear-5) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
 
+// Buttons
+var btnLogOut = document.getElementById("btnLogOut");
+var btnNewCustomer = document.getElementById("btnNewCustomer");
+var btnReadCustomer = document.getElementById("btnReadCustomer");
+var btnAddCustomer = document.getElementById("btnAddCustomer");
+var btnDeleteCustomer = document.getElementById("btnDeleteCustomer");
+
+var updateCustomerId = "";
 (function Constructor() {
     var customerListTableHeader = customerListTable.getElementsByTagName("thead")[0];
     var customerListTableTr = customerListTableHeader.insertRow(0);
@@ -81,7 +85,7 @@ btnNewCustomer.addEventListener('click', e => {
     location.replace('#open');
 });
 
-var isEqualYearAndMonth = function(tableDate, purchaseDate) {
+let isEqualYearAndMonth = function(tableDate, purchaseDate) {
     var tableDateYear = tableDate.split("/")[0];
     var tableDateMonth = tableDate.split("/")[1];
     var formattedPurchaseDate = formatDate(purchaseDate);
@@ -91,7 +95,7 @@ var isEqualYearAndMonth = function(tableDate, purchaseDate) {
     return (tableDateYear == purchaseDateYear && tableDateMonth == purchaseDateMonth);
 }
 
-var formatDate = function(insertDate) {
+let formatDate = function(insertDate) {
     if(insertDate == undefined || insertDate == "") return "";
     var insertYear = insertDate.split("/")[0];
     var insertMonth = insertDate.split("/")[1];
@@ -239,13 +243,13 @@ btnDeleteCustomer.addEventListener('click', e => {
    }
 });
 
-var resetUpdateStatus = function() {
+let resetUpdateStatus = function() {
    btnAddCustomer.setAttribute("isUpdate", "false");
    location.replace('#close');
    updateCustomerId = "";
 }
 
-var updateCustomer = function(customerId) {
+let updateCustomer = function(customerId) {
     $("#dialogTitle")[0].innerHTML = "기족 고객 수정";
     btnDeleteCustomer.disabled = false;
     resetDialog();
@@ -302,11 +306,11 @@ var updateCustomer = function(customerId) {
     });
 }
 
-var deleteAidContent = function(component) {
+let deleteAidContent = function(component) {
     component.parentElement.remove();
 }
 
-var addEarAid = function(side) {
+let addEarAid = function(side) {
     if(side == "left"){
         var side_ko = "좌";
     }else{
@@ -322,7 +326,7 @@ var addEarAid = function(side) {
     return $(newAidContent).insertBefore("#batteryOrderDate");
 }
 
-var resetDialog = function() {
+let resetDialog = function() {
     $(".hearingAidInfoTag").remove();
 
     $.each($('.modalDialog input'), function(index, inputTag) {
@@ -341,7 +345,7 @@ var resetDialog = function() {
     $('.note textarea')[0].value = "";
 }
 
-var filterTable = function() {
+let filterTable = function() {
     var input, filter, table, tr, td, i;
     input = document.getElementById("myInput");
     filter = input.value;
