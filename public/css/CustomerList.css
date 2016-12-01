@@ -1,0 +1,114 @@
+<style>
+
+/* Customer List Table Style */
+/*table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}*/
+
+.datagrid table { border-collapse: collapse; text-align: left; width: 100%; }
+.datagrid {background: #fff; overflow: hidden; border: 1px solid #00527A; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; }
+.datagrid table td, .datagrid table th { padding: 6px 6px; }
+.datagrid table thead th {background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #006699), color-stop(1, #00557F) );background:-moz-linear-gradient( center top, #006699 5%, #00557F 100% );filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');background-color:#006699; color:#FFFFFF; font-weight: bold; border-left: 1px solid #0070A8; }
+.datagrid table thead th:first-child { border: none; }
+.datagrid table tbody td { color: #00496B; border-left: 1px solid #E1EEF4; font-weight: normal; }
+.datagrid table tbody tr:nth-child(even) { background: #E1EEF4; color: #00496B; }
+.datagrid table tbody tr:nth-child(10n) { border-bottom: 15px solid; border-color: #00527A; }
+.datagrid table tbody td:first-child { border-left: none; }
+.datagrid table tbody tr:last-child td { border-bottom: none; }
+div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
+
+#twoYear, #fiveYear{
+    margin-top: 10px;
+}
+
+
+#btnDeleteCustomer {
+    float: right;
+}
+
+.customerMainInfo {
+    display: table-row-group;
+}
+
+#myInput {
+    margin-left: 10px;
+}
+
+#customerListContent {
+    counter-reset: rowNumber-1;
+}
+
+#customerListContent tr {
+    counter-increment: rowNumber;
+}
+
+#customerListContent tr td:first-child::before {
+    content: counter(rowNumber);
+    margin-right: 0.5em;
+}
+
+#customerListContent th:nth-child(1) {
+    width: 13%;
+}
+
+#customerListContent th:nth-child(2) {
+}
+
+#customerListContent th:nth-child(3) {
+
+}
+
+#customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
+	width: 15%;
+}
+
+#noticeContent th:nth-child(1) {
+	width: 13%;
+}
+
+#noticeContent th:nth-child(2) {
+	width: 22%;
+}
+
+#noticeContent th:nth-child(3) {
+	width: 22%;
+}
+
+#customerCount {
+    display: inline;
+}
+
+.background {
+    display: table;
+    width: 100%;
+    background-color: #00527A;
+}
+
+.datagrid {
+	padding: 10px;
+}
+
+.datagrid > table {
+	width: 100%;
+}
+
+@media (min-width: 400px) {
+	body { font-size: 13px;}
+}
+
+@media (min-width: 800px) {
+	body { font-size: 13px;}
+}
+</style>
