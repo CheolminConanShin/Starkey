@@ -94,11 +94,21 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 	width: 100%;
 }
 
-/*@media screen and (max-width: 480px) {
-	.background {
-		font-size: 100px;
-		background-color: black;
+body {
+    font-size: 13px;
+}
+
+@media screen and (max-width: 420px) {
+	body {
+        font-size: 8px;
 	}
-}*/
+
+    #customerListContent tr {
+    }
+
+    #customerListContent tr td:first-child::before {
+        content: "";
+    }
+}
 
 </style>
