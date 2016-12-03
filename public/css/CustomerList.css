@@ -102,11 +102,11 @@ body {
 
 @media screen and (min-width: 300px) {
 	body {
-        font-size: 8px;
+        font-size: 7px;
 	}
 
     .background {
-        background-color: red;
+        background-color: #006a9e;
     }
 
     #myInput {
@@ -128,7 +128,7 @@ body {
     }
 
     .background {
-        background-color: green;
+        background-color: #004668;
     }
 
     #myInput {
@@ -149,7 +149,7 @@ body {
     }
 
     .background {
-        background-color: #00527A;
+        background-color: #002f47;
     }
 
     #myInput {

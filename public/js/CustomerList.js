@@ -159,7 +159,7 @@ btnReadCustomer.addEventListener('click', e => {
         
         sorttable.makeSortable(customerListTable);
 
-        $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
+        // $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
 
         filterTable();
 
@@ -380,8 +380,8 @@ let filterTable = function() {
                 }
             }
         }
-
     }
+    $("#customerCount")[0].innerHTML = count;    
 }
 
 btnReadCustomer.click();
