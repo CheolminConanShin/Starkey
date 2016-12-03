@@ -1,13 +1,4 @@
 <style>
-@font-face {
-  font-family: bmhanna;
-  src: url(../font/BMHANNA.ttf);
-}
-
-@font-face {
-  font-family: bmdohyeon;
-  src: url(../font/BMDOHYEON.ttf);
-}
 
 /* Customer List Table Style */
 .datagrid table { border-collapse: collapse; text-align: left; width: 100%; }
@@ -47,15 +38,6 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 
 .buttonGroup {
 	margin-bottom: 10px;
-}
-
-#customerListContent tr {
-    counter-increment: rowNumber;
-}
-
-#customerListContent tr td:first-child::before {
-    content: counter(rowNumber);
-    margin-right: 0.5em;
 }
 
 #customerListContent th:nth-child(1) {
@@ -103,15 +85,29 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 	width: 100%;
 }
 
-body {
-    font-size: 12px;
-    font-family: bmdohyeon;
+@font-face {
+  font-family: bmhanna;
+  src: url(../font/BMHANNA.ttf);
 }
 
-@media screen and (max-width: 420px) {
+@font-face {
+  font-family: bmdohyeon;
+  src: url(../font/BMDOHYEON.ttf);
+}
+
+body {
+    font-size: 12px;
+    font-family: bmhanna;
+}
+
+@media screen and (min-width: 300px) {
 	body {
         font-size: 8px;
 	}
+
+    .background {
+        background-color: red;
+    }
 
     #myInput {
         margin-left: 0px;
@@ -123,6 +119,50 @@ body {
 
     #customerListContent tr td:first-child::before {
         content: "";
+    }
+}
+
+@media screen and (min-width: 600px) {
+    body {
+        font-size: 11px;
+    }
+
+    .background {
+        background-color: green;
+    }
+
+    #myInput {
+        margin-left: 10px;
+    }
+
+    #customerListContent tr {
+    }
+
+    #customerListContent tr td:first-child::before {
+        content: "";
+    }
+}
+
+@media screen and (min-width: 800px) {
+    body {
+        font-size: 12px;
+    }
+
+    .background {
+        background-color: #00527A;
+    }
+
+    #myInput {
+        margin-left: 10px;
+    }
+
+    #customerListContent tr {
+        counter-increment: rowNumber;
+    }
+
+    #customerListContent tr td:first-child::before {
+        content: counter(rowNumber);
+        margin-right: 0.5em;
     }
 }
 
