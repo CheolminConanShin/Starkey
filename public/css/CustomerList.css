@@ -60,11 +60,11 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 }
 
 #noticeContent th:nth-child(2) {
-	width: 27%;
+	width: 23%;
 }
 
 #noticeContent th:nth-child(3) {
-	width: 27%;
+	width: 23%;
 }
 
 #customerCount {
