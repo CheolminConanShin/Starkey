@@ -1,4 +1,13 @@
 <style>
+@font-face {
+  font-family: bmhanna;
+  src: url(../font/BMHANNA.ttf);
+}
+
+@font-face {
+  font-family: bmdohyeon;
+  src: url(../font/BMDOHYEON.ttf);
+}
 
 /* Customer List Table Style */
 .datagrid table { border-collapse: collapse; text-align: left; width: 100%; }
@@ -50,7 +59,7 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 }
 
 #customerListContent th:nth-child(1) {
-    width: 13%;
+    width: 12%;
 }
 
 #customerListContent th:nth-child(2) {
@@ -61,7 +70,7 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 }
 
 #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
-	width: 15%;
+	width: 18%;
 }
 
 #noticeContent th:nth-child(1) {
@@ -96,6 +105,7 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 
 body {
     font-size: 13px;
+    font-family: bmdohyeon;
 }
 
 @media screen and (max-width: 420px) {
