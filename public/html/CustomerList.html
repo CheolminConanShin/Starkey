@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="../lib/jquery-3.1.1.min.js"></script>
+    <script src="../lib/bootstrap.min.js"></script>
     <script src="../lib/sorttable.js"></script>
+    <link rel="stylesheet" type="text/css" href="../lib/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../lib/font-awesome.min.css">
     <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/CustomerList.css">
     <link rel="stylesheet" type="text/css" href="../css/ModalDialog.css">
 </head>
@@ -23,7 +23,11 @@
                 <button id="btnReadCustomer" class="btn btn-success">고객 조회</button>
                 <button id="btnLogOut" class="btn btn-danger">로그 아웃</button>
             </div>
-            <table id="customerList" class="sortable">
+            <div id="loader">
+                <div id="spinner"></div>
+                <h4>데이터 불러오는 중</h4>
+            </div>
+            <table id="customerList" class="customersTable sortable">
                 <thead></thead>
                 <tbody></tbody>
             </table>
@@ -32,21 +36,21 @@
     <div id="noticeContent" class="col-xs-12 col-md-5">
         <div class="datagrid" id="oneYear">
             <h3>1년차 고객</h3>
-            <table>
+            <table class="customersTable">
                 <thead></thead>
                 <tbody></tbody>
             </table>
         </div>
         <div class="datagrid" id="twoYear">
             <h3>2년차 고객</h3>
-            <table>
+            <table class="customersTable">
                 <thead></thead>
                 <tbody></tbody>
             </table>
         </div>
         <div class="datagrid" id="fiveYear">
             <h3>5년차 고객</h3>
-            <table>
+            <table class="customersTable">
                 <thead></thead>
                 <tbody></tbody>
             </table>

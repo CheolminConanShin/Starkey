@@ -1,6 +1,6 @@
 // Firebase Config Setting
 const columns = ["이름", "가입일", "주소", "집 전화번호", "핸드폰 번호"];
-const yearColumns = ["이름", "집 전화번호", "핸드폰 번호", "최근 보청기 구입일", "모델명"];
+const yearColumns = ["이름", "집 전화번호", "핸드폰 번호", "보청기 구입일", "모델명"];
 // ["이름", "나이", "성별", "보청기 모델", "보청기 구입시기", "배터리 구입시기", "복지카드 유무", "주소", "전화번호", "수정"];
 
 const config = {
@@ -108,6 +108,8 @@ let formatDate = function(insertDate) {
 }
 
 btnReadCustomer.addEventListener('click', e => {
+    $(".customersTable").hide();
+    $("#loader").show();
     customerRef.on('value', function(snapshot) {
         document.getElementById("myInput").value = "";
 
@@ -154,11 +156,15 @@ btnReadCustomer.addEventListener('click', e => {
                 });
             }
         });
+        
         sorttable.makeSortable(customerListTable);
 
         $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
 
         filterTable();
+
+        $("#loader").hide();
+        $(".customersTable").show();
     });
 });
 
