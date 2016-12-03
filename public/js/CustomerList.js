@@ -155,7 +155,10 @@ btnReadCustomer.addEventListener('click', e => {
             }
         });
         sorttable.makeSortable(customerListTable);
+
         $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
+
+        filterTable();
     });
 });
 
@@ -346,11 +349,11 @@ let resetDialog = function() {
 }
 
 let filterTable = function() {
-    var input, filter, table, tr, td, i;
-    input = document.getElementById("myInput");
-    filter = input.value;
+    let filter, table, tr, td, i, count;
+    filter = document.getElementById("myInput").value;
     table = document.getElementById("customerList");
     tr = table.getElementsByTagName("tr");
+    count = 0;
 
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
@@ -359,6 +362,12 @@ let filterTable = function() {
             if (td) {
                 if (td.innerHTML.indexOf(filter) > -1) {
                     tr[i].style.display = "";
+                    count++;
+                    if(count % 10 == 0) {
+                        tr[i].className = "highlight";
+                    } else {
+                        tr[i].className = "";
+                    }
                     break;
                 } else {
                     tr[i].style.display = "none";
