@@ -113,6 +113,11 @@ body {
         font-size: 8px;
 	}
 
+    #myInput {
+        margin-left: 0px;
+        margin-top: 10px;
+    }
+
     #customerListContent tr {
     }
 
