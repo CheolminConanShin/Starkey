@@ -111,7 +111,7 @@ body {
     }
 
     #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
-        width: 20%;
+        width: 21%;
     }
 
     #customerListContent tr {
