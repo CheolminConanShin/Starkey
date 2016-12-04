@@ -220,7 +220,7 @@ body {
     float: right;
 }
 
-.modal-body > table tr > td:nth-child(1) {
+.modal-body > table tr > td:nth-child(1), .modal-body > table tr > td:nth-child(3) {
     width: 15%;
 }
 </style>
