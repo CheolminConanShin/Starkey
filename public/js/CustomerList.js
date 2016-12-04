@@ -325,16 +325,16 @@ let addEarAid = function(side) {
     '<label>모델명('+side_ko+')</label>'+
     '</td>'+
     '<td>'+
-    '<input class="hearingAidInfo" type="text" name="hearingAidModel" side="'+side+'"/>'+
+    '<input class="hearingAidInfo form-control" type="text" name="hearingAidModel" side="'+side+'"/>'+
     '</td>'+
     '<td>'+
     '<label>구입날짜</label>'+
     '</td>'+
     '<td>'+
-    '<input class="hearingAidInfo" type="text" name="hearingAidPurchaseDate" value="'+currentDate+'" side="'+side+'"/>'+
+    '<input class="hearingAidInfo form-control" type="text" name="hearingAidPurchaseDate" value="'+currentDate+'" side="'+side+'"/>'+
     '</td>'+
     '<td>'+
-    '<button onclick="deleteAidContent(this)">X</button>'+
+    '<button class="btn btn-default" onclick="deleteAidContent(this)">X</button>'+
     '</td>'+
     '</tr>'
     return $(newAidContent).insertBefore("#batteryOrderDate");
