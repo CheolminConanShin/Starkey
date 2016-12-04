@@ -317,12 +317,14 @@ let deleteAidContent = function(component) {
 let addEarAid = function(side) {
     if(side == "left"){
         var side_ko = "좌";
+        var text_color = "text-primary";
     }else{
         var side_ko = "우";
+        var text_color = "text-danger";
     }
     var newAidContent = '<tr class="hearingAidInfoTag">'+
     '<td>'+
-    '<label>모델명('+side_ko+')</label>'+
+    '<label class="'+text_color+'">모델명('+side_ko+')</label>'+
     '</td>'+
     '<td>'+
     '<input class="hearingAidInfo form-control" type="text" name="hearingAidModel" side="'+side+'"/>'+
