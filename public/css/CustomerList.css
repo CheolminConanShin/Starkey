@@ -59,11 +59,7 @@ div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
 	width: 14%;
 }
 
-#noticeContent th:nth-child(2) {
-	width: 23%;
-}
-
-#noticeContent th:nth-child(3) {
+#noticeContent th:nth-child(2), #noticeContent th:nth-child(3) {
 	width: 23%;
 }
 
@@ -114,6 +110,10 @@ body {
         margin-top: 10px;
     }
 
+    #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
+        width: 20%;
+    }
+
     #customerListContent tr {
     }
 
@@ -135,6 +135,10 @@ body {
         margin-left: 10px;
     }
 
+    #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
+        width: 18%;
+    }
+
     #customerListContent tr {
     }
 
@@ -154,6 +158,10 @@ body {
 
     #myInput {
         margin-left: 10px;
+    }
+
+    #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
+        width: 18%;
     }
 
     #customerListContent tr {
