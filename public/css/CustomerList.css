@@ -10,8 +10,6 @@
 .datagrid table tbody tr:nth-child(even) { background: #E1EEF4; color: #00496B; }
 .datagrid table tbody td:first-child { border-left: none; }
 .datagrid table tbody tr:last-child td { border-bottom: none; }
-div.dhtmlx_window_active, div.dhx_modal_cover_dv { position: fixed !important; }
-
 
 .highlight { border-bottom: 15px solid; border-color: #00527A; }
 
@@ -204,4 +202,21 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+/* Modal Dialog */
+.table-borderless tbody tr td,
+.table-borderless tbody tr th,
+.table-borderless thead tr th,
+.table-borderless thead tr td,
+.table-borderless tfoot tr th,
+.table-borderless tfoot tr td {
+    border: none;
+}
+
+.modal-title {
+    float: left;
+}
+
+#btnCancelNewCustomer {
+    float: right;
+}
 </style>

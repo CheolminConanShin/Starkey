@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../lib/font-awesome.min.css">
     <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/CustomerList.css">
-    <link rel="stylesheet" type="text/css" href="../css/ModalDialog.css">
+<!--     <link rel="stylesheet" type="text/css" href="../css/ModalDialog.css">-->
 </head>
 <body>
 <div class="background">
@@ -19,7 +19,7 @@
                 <div id="customerCount"></div>명 )<input type="text" id="myInput" onkeyup="filterTable()" placeholder="검색어 입력">
             </h3>
             <div class="buttonGroup">
-                <button id="btnNewCustomer" class="btn btn-primary">새 고객입력</button>
+                <button id="btnNewCustomer" type="button" data-toggle="modal" data-target="#open" /*id="btnNewCustomer"*/ class="btn btn-primary">새 고객입력</button>
                 <button id="btnReadCustomer" class="btn btn-success">고객 조회</button>
                 <button id="btnLogOut" class="btn btn-danger">로그 아웃</button>
             </div>
@@ -58,65 +58,109 @@
     </div>
 
     <!-- New Customer Dialog -->
-    <div id="open" class="modalDialog">
-        <div>
-            <a href="#close" title="Close" class="close">X</a>
-            <table>
-                <div class="customerMainInfo">
-                    <p>
-                        <h id="dialogTitle"></h>
-                    </p>
-                    <p>
-                        <label>이름</label>
-                        <input type="text" name="customerName"/>
-                    </p>
-                    <p>
-                        <label>나이</label>
-                        <input type="text" name="customerAge"/>
-                    </p>
-                    <p>
-                        <label>성별</label>
-                        남<input type="radio" name="customerSex" value="Male" checked="checked"/>
-                        여<input type="radio" name="customerSex" value="Female"/>
-                    </p>
-                    <p>
-                        <label>보청기</label>
-                        <button onclick="addEarAid('left')">+좌</button>
-                        <button onclick="addEarAid('right')">+우</button>
-                    </p>
-                    <p id="batteryOrderDate">
-                        <label>배터리 구입일</label>
-                        <input type="text" name="batteryOrderDate"/>
-                    </p>
-                    <p>
-                        <label>복지카드 유무</label>
-                        Yes<input type="radio" name="cardYN" value="Yes" checked="checked"/>
-                        No<input type="radio" name="cardYN" value="No"/>
-                    </p>
-                    <p>
-                        <label>주소</label>
-                        <input type="text" name="address"/>
-                    </p>
-                    <p>
-                        <label>집 전화번호</label>
-                        <input type="text" name="phoneNumber"/>
-                        <label>핸드폰 번호</label>
-                        <input type="text" name="mobilePhoneNumber"/>
-                    </p>
-                    <p>
-                        <label>가입일</label>
-                        <input type="text" name="registrationDate"/>
-                    </p>
+    <div id="open" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">고객 정보</h3>
+                    <button id="btnCancelNewCustomer" class="btn btn-default" data-dismiss="modal">X</button>
                 </div>
-                <div class="note">
-                    <p>
-                        <label>메모</label>
-                        <textarea rows="4" colspan="4"></textarea>
-                    </p>
+                <div class="modal-body table-responsive">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                <label>이름</label>
+                            </td>
+                            <td>
+                                <input type="text" name="customerName"/>
+                            </td>
+                            <td>
+                                <label>나이</label>
+                            </td>
+                            <td>
+                                <input type="text" name="customerAge"/>
+                            </td>         
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>성별</label>
+                            </td>
+                            <td>
+                                남<input type="radio" name="customerSex" value="Male" checked="checked"/>
+                                여<input type="radio" name="customerSex" value="Female"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>보청기</label>
+                            </td>
+                            <td>
+                                <button onclick="addEarAid('left')">+좌</button>
+                                <button onclick="addEarAid('right')">+우</button>
+                            </td>
+                        </tr>
+                        <tr id="batteryOrderDate">
+                            <td>
+                                <label>배터리 구입일</label>
+                            </td>
+                            <td>
+                                <input type="text" name="batteryOrderDate"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>복지카드 유무</label>
+                            </td>
+                            <td>
+                                Yes<input type="radio" name="cardYN" value="Yes" checked="checked"/>
+                                No<input type="radio" name="cardYN" value="No"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>주소</label>
+                            </td>
+                            <td>
+                                <input type="text" name="address"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>집 전화번호</label>
+                            </td>
+                            <td>
+                                <input type="text" name="phoneNumber"/>
+                            </td>
+                            <td>
+                                <label>핸드폰 번호</label>
+                            </td>
+                            <td>
+                                <input type="text" name="mobilePhoneNumber"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>가입일</label>
+                            </td>
+                            <td>
+                                <input type="text" name="registrationDate"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>메모</label>
+                            </td>
+                            <td>
+                                <textarea rows="4" colspan="4"></textarea>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <button id="btnAddCustomer" isUpdate="false" class="btn btn-primary">저장</button>
-                <button id="btnDeleteCustomer" class="btn btn-danger">삭제</button>
-            </table>
+                <div class="modal-footer">
+                    <button id="btnAddCustomer" class="btn btn-primary" isUpdate="false">저장</button>
+                    <button id="btnDeleteCustomer" class="btn btn-danger">삭제</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

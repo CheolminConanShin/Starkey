@@ -42,6 +42,7 @@ var btnNewCustomer = document.getElementById("btnNewCustomer");
 var btnReadCustomer = document.getElementById("btnReadCustomer");
 var btnAddCustomer = document.getElementById("btnAddCustomer");
 var btnDeleteCustomer = document.getElementById("btnDeleteCustomer");
+var btnCancelNewCustomer = document.getElementById("btnCancelNewCustomer");
 
 var updateCustomerId = "";
 (function Constructor() {
@@ -80,9 +81,9 @@ var updateCustomerId = "";
 
 btnNewCustomer.addEventListener('click', e => {
     resetDialog();
-    $("#dialogTitle")[0].innerHTML = "신규 고객 추가";
+    updateCustomerId = "";
+    // $("#dialogTitle")[0].innerHTML = "신규 고객 추가";
     btnDeleteCustomer.disabled = true;
-    location.replace('#open');
 });
 
 let isEqualYearAndMonth = function(tableDate, purchaseDate) {
@@ -129,7 +130,7 @@ btnReadCustomer.addEventListener('click', e => {
             var bodyRow = customerListTableBody.insertRow(index);
             var customerData = data.val();
             // row.insertCell(0).innerHTML = data.key();
-            bodyRow.insertCell(0).innerHTML = '<a href="#open" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+            bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
             bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
             bodyRow.insertCell(2).innerHTML = customerData.address;
             bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
@@ -148,7 +149,7 @@ btnReadCustomer.addEventListener('click', e => {
                     } else {
                         return;
                     }
-                    yearTableRow.insertCell(0).innerHTML = '<a href="#open" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+                    yearTableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
                     yearTableRow.insertCell(1).innerHTML = customerData.phoneNumber;
                     yearTableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
                     yearTableRow.insertCell(3).innerHTML = hearingAidData.date;
@@ -175,12 +176,12 @@ btnLogOut.addEventListener('click', e => {
 });
 
 btnAddCustomer.addEventListener('click', e => {
-    var customerData = $('.modalDialog').find('input').serializeArray().reduce(function(obj, item) {
+    var customerData = $('.modal-body').find('input').serializeArray().reduce(function(obj, item) {
         obj[item.name] = item.value;
         return obj;
     }, {});
 
-    customerData.note = $('.note textarea')[0].value;
+    customerData.note = $('.modal-body textarea')[0].value;
 
     var emptyFlag = false;
     var emptyMsg = "";
@@ -205,35 +206,29 @@ btnAddCustomer.addEventListener('click', e => {
     if(emptyFlag) {
         alert(emptyMsg);
     } else {
+        var customerObject = {
+            name: customerData.customerName,
+            age: customerData.customerAge,
+            sex : customerData.customerSex,
+            hearingAid: customerData.hearingAid,
+            batteryOrderDate: formatDate(customerData.batteryOrderDate),
+            cardAvailability: customerData.cardYN,
+            address: customerData.address,
+            phoneNumber : customerData.phoneNumber,
+            mobilePhoneNumber : customerData.mobilePhoneNumber,
+            registrationDate : formatDate(customerData.registrationDate),
+            note : customerData.note
+        }
         if(btnAddCustomer.getAttribute("isUpdate") == "false") {
-            customerRef.push().set({
-                name: customerData.customerName,
-                age: customerData.customerAge,
-                sex : customerData.customerSex,
-                hearingAid: customerData.hearingAid,
-                batteryOrderDate: formatDate(customerData.batteryOrderDate),
-                cardAvailability: customerData.cardYN,
-                address: customerData.address,
-                phoneNumber : customerData.phoneNumber,
-                mobilePhoneNumber : customerData.mobilePhoneNumber,
-                registrationDate : formatDate(customerData.registrationDate),
-                note : customerData.note
-            });
+            customerRef.push().set(customerObject);
         } else {
+            if(updateCustomerId == "") {
+                alert("예상치 못 한 오류 발생");
+                resetUpdateStatus();
+                return;
+            }
             var updates = {};
-            updates[updateCustomerId] = {
-                name: customerData.customerName,
-                age: customerData.customerAge,
-                sex : customerData.customerSex,
-                hearingAid: customerData.hearingAid,
-                batteryOrderDate: formatDate(customerData.batteryOrderDate),
-                cardAvailability: customerData.cardYN,
-                address: customerData.address,
-                phoneNumber : customerData.phoneNumber,
-                mobilePhoneNumber : customerData.mobilePhoneNumber,
-                registrationDate : formatDate(customerData.registrationDate),
-                note : customerData.note
-            };
+            updates[updateCustomerId] = customerObject;
             customerRef.update(updates);
         }
         resetUpdateStatus();
@@ -254,14 +249,14 @@ btnDeleteCustomer.addEventListener('click', e => {
 
 let resetUpdateStatus = function() {
    btnAddCustomer.setAttribute("isUpdate", "false");
-   location.replace('#close');
+   btnCancelNewCustomer.click();
    updateCustomerId = "";
 }
 
 let updateCustomer = function(customerId) {
-    $("#dialogTitle")[0].innerHTML = "기족 고객 수정";
-    btnDeleteCustomer.disabled = false;
     resetDialog();
+    btnNewCustomer.click();
+    btnDeleteCustomer.disabled = false;
     btnAddCustomer.setAttribute("isUpdate", "true");
     updateCustomerId = customerId;
     var customerName = document.getElementsByName("customerName")[0];
@@ -275,7 +270,7 @@ let updateCustomer = function(customerId) {
     var phoneNumber = document.getElementsByName("phoneNumber")[0];
     var mobilePhoneNumber = document.getElementsByName("mobilePhoneNumber")[0];
     var registrationDate = document.getElementsByName("registrationDate")[0];
-    var note = $('.note textarea')[0];
+    var note = $('.modal-body textarea')[0];
 
     customerRef.child(customerId).once("value").then(function(snapshot) {
         var customerData = snapshot.val();
@@ -316,7 +311,7 @@ let updateCustomer = function(customerId) {
 }
 
 let deleteAidContent = function(component) {
-    component.parentElement.remove();
+    component.parentNode.parentNode.remove()
 }
 
 let addEarAid = function(side) {
@@ -325,20 +320,30 @@ let addEarAid = function(side) {
     }else{
         var side_ko = "우";
     }
-    var newAidContent = '<p class="hearingAidInfoTag">'+
+    var newAidContent = '<tr class="hearingAidInfoTag">'+
+    '<td>'+
     '<label>모델명('+side_ko+')</label>'+
+    '</td>'+
+    '<td>'+
     '<input class="hearingAidInfo" type="text" name="hearingAidModel" side="'+side+'"/>'+
+    '</td>'+
+    '<td>'+
     '<label>구입날짜</label>'+
+    '</td>'+
+    '<td>'+
     '<input class="hearingAidInfo" type="text" name="hearingAidPurchaseDate" value="'+currentDate+'" side="'+side+'"/>'+
+    '</td>'+
+    '<td>'+
     '<button onclick="deleteAidContent(this)">X</button>'+
-    '</p>'
+    '</td>'+
+    '</tr>'
     return $(newAidContent).insertBefore("#batteryOrderDate");
 }
 
 let resetDialog = function() {
     $(".hearingAidInfoTag").remove();
 
-    $.each($('.modalDialog input'), function(index, inputTag) {
+    $.each($('.modal-body input'), function(index, inputTag) {
         if(inputTag.name == "customerSex" || inputTag.name == "cardYN") {
            if(inputTag.value == "Male") inputTag.checked = true;
            if(inputTag.value == "Female") inputTag.checked = false;
@@ -351,7 +356,7 @@ let resetDialog = function() {
         }
     });
 
-    $('.note textarea')[0].value = "";
+    $('.modal-body textarea')[0].value = "";
 }
 
 let filterTable = function() {
