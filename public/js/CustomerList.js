@@ -14,7 +14,6 @@ firebase.auth().onAuthStateChanged(function(currentUser) {
     if (currentUser) {
         console.log("Welcome " + currentUser.email);
     } else {
-//        alert("로그인 해 주세요");
         location.replace("/html/Login.html");
     }
 });
@@ -82,7 +81,6 @@ var updateCustomerId = "";
 btnNewCustomer.addEventListener('click', e => {
     resetDialog();
     updateCustomerId = "";
-    // $("#dialogTitle")[0].innerHTML = "신규 고객 추가";
     btnDeleteCustomer.disabled = true;
 });
 
@@ -129,13 +127,11 @@ btnReadCustomer.addEventListener('click', e => {
         snapshot.forEach(function(data, index) {
             var bodyRow = customerListTableBody.insertRow(index);
             var customerData = data.val();
-            // row.insertCell(0).innerHTML = data.key();
             bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
             bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
             bodyRow.insertCell(2).innerHTML = customerData.address;
             bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
             bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
-//            bodyRow.insertCell(4).innerHTML = '<button onclick="deleteCustomer(\'' + data.key + '\')">DELETE</button>';
 
             if(customerData.hearingAid != undefined){
                 customerData.hearingAid.forEach(function(hearingAidData, index) {
@@ -159,8 +155,6 @@ btnReadCustomer.addEventListener('click', e => {
         });
         
         sorttable.makeSortable(customerListTable);
-
-        // $("#customerCount")[0].innerHTML = $("#customerList tr").length-1;
 
         filterTable();
 
