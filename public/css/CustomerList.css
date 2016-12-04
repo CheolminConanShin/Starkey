@@ -219,4 +219,8 @@ body {
 #btnCancelNewCustomer {
     float: right;
 }
+
+.modal-body > table tr > td:nth-child(1) {
+    width: 15%;
+}
 </style>
