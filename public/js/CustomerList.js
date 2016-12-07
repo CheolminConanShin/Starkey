@@ -86,16 +86,6 @@ btnNewCustomer.addEventListener('click', e => {
     btnDeleteCustomer.disabled = true;
 });
 
-let isEqualYearAndMonth = function(tableDate, purchaseDate) {
-    var tableDateYear = tableDate.split("/")[0];
-    var tableDateMonth = tableDate.split("/")[1];
-    var formattedPurchaseDate = formatDate(purchaseDate);
-    var purchaseDateYear = formattedPurchaseDate.split("/")[0];
-    var purchaseDateMonth = formattedPurchaseDate.split("/")[1];
-
-    return (tableDateYear == purchaseDateYear && tableDateMonth == purchaseDateMonth);
-}
-
 let formatDate = function(insertDate) {
     if(insertDate == undefined || insertDate == "") return "";
     var insertYear = insertDate.split("/")[0];
@@ -106,6 +96,32 @@ let formatDate = function(insertDate) {
     var formattedDay = insertDay.length < 2 ? "0" + insertDay : insertDay;
 
     return insertYear + "/" + formattedMonth + "/" + formattedDay;
+}
+
+let isInNextThreeDays = function(tableDate, purchaseDate) {
+    var tableDateYear = tableDate.split("/")[0];
+    var tableDateMonth = tableDate.split("/")[1];
+    var tableDateDay = tableDate.split("/")[2];
+    var tableDate = new Date(tableDateYear, tableDateMonth-1, tableDateDay);
+    
+    var formattedPurchaseDate = formatDate(purchaseDate);
+    var purchaseDateYear = formattedPurchaseDate.split("/")[0];
+    var purchaseDateMonth = formattedPurchaseDate.split("/")[1];
+    var purchaseDateDay = formattedPurchaseDate.split("/")[2];
+    var purchaseDate = new Date(purchaseDateYear, purchaseDateMonth-1, purchaseDateDay);
+
+    return purchaseDate >= tableDate && purchaseDate <= tableDate.setDate(tableDate.getDate() + 3);
+}
+
+let isEqualYearAndMonth = function(tableDate, purchaseDate) {
+    var tableDateYear = tableDate.split("/")[0];
+    var tableDateMonth = tableDate.split("/")[1];
+
+    var formattedPurchaseDate = formatDate(purchaseDate);
+    var purchaseDateYear = formattedPurchaseDate.split("/")[0];
+    var purchaseDateMonth = formattedPurchaseDate.split("/")[1];
+
+    return (tableDateYear == purchaseDateYear && tableDateMonth == purchaseDateMonth);
 }
 
 let clearTableAndReturn = function(table) {
@@ -142,38 +158,24 @@ btnReadCustomer.addEventListener('click', e => {
             if(customerData.hearingAid != undefined){
                 customerData.hearingAid.forEach(function(hearingAidData, index) {
                     var tableRow = null;
-                    switch(hearingAidData.date) {
-                        case weekAgo:
-                            tableRow = oneWeekTableBody.insertRow(oneWeekTableBody.length);
-                            break;
-                        case threeWeeksAgo:
-                            tableRow = threeWeekTableBody.insertRow(threeWeekTableBody.length);
-                            break;
-                        case sevenWeeksAgo:
-                            tableRow = sevenWeekTableBody.insertRow(sevenWeekTableBody.length);
-                            break;
-                        // case before1YearDate:
-                        //     tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
-                        //     break;
-                        // case before2YearDate:
-                        //     tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
-                        //     break;
-                        // case before5YearDate:
-                        //     tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
-                        //     break;
-                        // default:
-                        //     return;
-                    }
 
-                    if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
+                    // Week and Year Check 
+                    if(isInNextThreeDays(weekAgo, hearingAidData.date)) {
+                        tableRow = oneWeekTableBody.insertRow(oneWeekTableBody.length);
+                    } else if(isInNextThreeDays(threeWeeksAgo, hearingAidData.date)) {
+                        tableRow = threeWeekTableBody.insertRow(threeWeekTableBody.length);
+                    } else if(isInNextThreeDays(sevenWeeksAgo, hearingAidData.date)) {
+                        tableRow = sevenWeekTableBody.insertRow(sevenWeekTableBody.length);
+                    } else if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
                         tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
                     } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
                         tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
                     } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
                         tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
                     } else {
-                        if(tableRow == null) return;
+                        return;
                     }
+
                     tableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
                     tableRow.insertCell(1).innerHTML = customerData.phoneNumber;
                     tableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
