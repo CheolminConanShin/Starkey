@@ -33,7 +33,7 @@ let fiveYearTable = document.getElementById("fiveYear").getElementsByTagName("ta
 function convertDate(inputFormat) {
     function pad(s) { return (s < 10) ? '0' + s : s; }
     var d = new Date(inputFormat);
-    return [pad(d.getFullYear()), pad(d.getMonth()+1), d.getDate()].join('/');
+    return [pad(d.getFullYear()), pad(d.getMonth()+1), pad(d.getDate())].join('/');
 }
 let now = new Date();
 let currentDate = convertDate(now);
