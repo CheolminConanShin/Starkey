@@ -22,18 +22,27 @@ let customerRef = firebase.database().ref('customers/');
 
 // Dom Elements
 let customerListTable = document.getElementById("customerList");
+let oneWeekTable = document.getElementById("oneWeek").getElementsByTagName("table")[0];
+let threeWeekTable = document.getElementById("threeWeek").getElementsByTagName("table")[0];
+let sevenWeekTable = document.getElementById("sevenWeek").getElementsByTagName("table")[0];
 let oneYearTable = document.getElementById("oneYear").getElementsByTagName("table")[0];
 let twoYearTable = document.getElementById("twoYear").getElementsByTagName("table")[0];
 let fiveYearTable = document.getElementById("fiveYear").getElementsByTagName("table")[0];
 
 // Global Variables
+function convertDate(inputFormat) {
+    function pad(s) { return (s < 10) ? '0' + s : s; }
+    var d = new Date(inputFormat);
+    return [pad(d.getFullYear()), pad(d.getMonth()+1), d.getDate()].join('/');
+}
 let now = new Date();
-let nowYear = now.getFullYear();
-let nowMonth = (now.getMonth()+1) <= 9 ? "0" + (now.getMonth()+1) : (now.getMonth()+1);
-let currentDate = nowYear + "/" + nowMonth + "/" + now.getDate();
-let before1YearDate = (nowMonth == 12 ? nowYear-0 : nowYear-1) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
-let before2YearDate = (nowMonth == 12 ? nowYear-1 : nowYear-2) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
-let before5YearDate = (nowMonth == 12 ? nowYear-4 : nowYear-5) + "/" + (nowMonth == 12 ? "01" : nowMonth+1) + "/" + now.getDate();
+let currentDate = convertDate(now);
+let weekAgo = convertDate(new Date().setDate(now.getDate() - 7));
+let threeWeeksAgo = convertDate(new Date().setDate(now.getDate() - 21));
+let sevenWeeksAgo = convertDate(new Date().setDate(now.getDate() - 49));
+let before1YearDate = convertDate(new Date().setFullYear(now.getFullYear() - 1));
+let before2YearDate = convertDate(new Date().setFullYear(now.getFullYear() - 2));
+let before5YearDate = convertDate(new Date().setFullYear(now.getFullYear() - 5));
 
 // Buttons
 var btnLogOut = document.getElementById("btnLogOut");
@@ -42,6 +51,16 @@ var btnReadCustomer = document.getElementById("btnReadCustomer");
 var btnAddCustomer = document.getElementById("btnAddCustomer");
 var btnDeleteCustomer = document.getElementById("btnDeleteCustomer");
 var btnCancelNewCustomer = document.getElementById("btnCancelNewCustomer");
+
+let setTableHeader = function(table) {
+    var tableHeader = table.getElementsByTagName("thead")[0];
+    var tableTr = tableHeader.insertRow(0);
+    yearColumns.forEach(function(columnName, index) {
+        var th = document.createElement('th');
+        th.innerHTML = columnName;
+        tableTr.appendChild(th);
+    });
+}
 
 var updateCustomerId = "";
 (function Constructor() {
@@ -53,29 +72,12 @@ var updateCustomerId = "";
         customerListTableTr.appendChild(th);
     });
 
-    var oneYearTableHeader = oneYearTable.getElementsByTagName("thead")[0];
-    var oneYearTableTr = oneYearTableHeader.insertRow(0);
-    yearColumns.forEach(function(columnName, index) {
-        var th = document.createElement('th');
-        th.innerHTML = columnName;
-        oneYearTableTr.appendChild(th);
-    });
-
-    var twoYearTableHeader = twoYearTable.getElementsByTagName("thead")[0];
-    var twoYearTableTr = twoYearTableHeader.insertRow(0);
-    yearColumns.forEach(function(columnName, index) {
-        var th = document.createElement('th');
-        th.innerHTML = columnName;
-        twoYearTableTr.appendChild(th);
-    });
-
-    var fiveYearTableHeader = fiveYearTable.getElementsByTagName("thead")[0];
-    var fiveYearTableTr = fiveYearTableHeader.insertRow(0);
-    yearColumns.forEach(function(columnName, index) {
-        var th = document.createElement('th');
-        th.innerHTML = columnName;
-        fiveYearTableTr.appendChild(th);
-    });
+    setTableHeader(oneWeekTable);
+    setTableHeader(threeWeekTable);
+    setTableHeader(sevenWeekTable);
+    setTableHeader(oneYearTable);
+    setTableHeader(twoYearTable);
+    setTableHeader(fiveYearTable);
 }());
 
 btnNewCustomer.addEventListener('click', e => {
@@ -106,6 +108,12 @@ let formatDate = function(insertDate) {
     return insertYear + "/" + formattedMonth + "/" + formattedDay;
 }
 
+let clearTableAndReturn = function(table) {
+    var tableBody = table.getElementsByTagName("tbody")[0];
+    tableBody.innerHTML = "";
+    return tableBody;
+}
+
 btnReadCustomer.addEventListener('click', e => {
     $(".customersTable").hide();
     $("#loader").show();
@@ -115,14 +123,12 @@ btnReadCustomer.addEventListener('click', e => {
         var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
         customerListTableBody.innerHTML = "";
 
-        var oneYearTableBody = oneYearTable.getElementsByTagName("tbody")[0];
-        oneYearTableBody.innerHTML = "";
-
-        var twoYearTableBody = twoYearTable.getElementsByTagName("tbody")[0];
-        twoYearTableBody.innerHTML = "";
-
-        var fiveYearTableBody = fiveYearTable.getElementsByTagName("tbody")[0];
-        fiveYearTableBody.innerHTML = "";
+        var oneWeekTableBody = clearTableAndReturn(oneWeekTable);
+        var threeWeekTableBody = clearTableAndReturn(threeWeekTable);
+        var sevenWeekTableBody = clearTableAndReturn(sevenWeekTable);
+        var oneYearTableBody = clearTableAndReturn(oneYearTable);
+        var twoYearTableBody = clearTableAndReturn(twoYearTable);
+        var fiveYearTableBody = clearTableAndReturn(fiveYearTable);
 
         snapshot.forEach(function(data, index) {
             var bodyRow = customerListTableBody.insertRow(index);
@@ -135,21 +141,44 @@ btnReadCustomer.addEventListener('click', e => {
 
             if(customerData.hearingAid != undefined){
                 customerData.hearingAid.forEach(function(hearingAidData, index) {
-                    var yearTableRow;
-                    if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
-                        yearTableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
-                    } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
-                        yearTableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
-                    } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
-                        yearTableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
-                    } else {
-                        return;
+                    var tableRow = null;
+                    switch(hearingAidData.date) {
+                        case weekAgo:
+                            tableRow = oneWeekTableBody.insertRow(oneWeekTableBody.length);
+                            break;
+                        case threeWeeksAgo:
+                            tableRow = threeWeekTableBody.insertRow(threeWeekTableBody.length);
+                            break;
+                        case sevenWeeksAgo:
+                            tableRow = sevenWeekTableBody.insertRow(sevenWeekTableBody.length);
+                            break;
+                        // case before1YearDate:
+                        //     tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
+                        //     break;
+                        // case before2YearDate:
+                        //     tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
+                        //     break;
+                        // case before5YearDate:
+                        //     tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
+                        //     break;
+                        // default:
+                        //     return;
                     }
-                    yearTableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
-                    yearTableRow.insertCell(1).innerHTML = customerData.phoneNumber;
-                    yearTableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
-                    yearTableRow.insertCell(3).innerHTML = hearingAidData.date;
-                    yearTableRow.insertCell(4).innerHTML = hearingAidData.model;
+
+                    if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
+                        tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
+                        tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
+                        tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
+                    } else {
+                        if(tableRow == null) return;
+                    }
+                    tableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+                    tableRow.insertCell(1).innerHTML = customerData.phoneNumber;
+                    tableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
+                    tableRow.insertCell(3).innerHTML = hearingAidData.date;
+                    tableRow.insertCell(4).innerHTML = hearingAidData.model;
                 });
             }
         });
