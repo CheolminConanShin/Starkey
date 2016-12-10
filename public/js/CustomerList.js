@@ -183,7 +183,6 @@ let clearTableAndReturn = function(table) {
 }
 
 btnReadCustomer.addEventListener('click', e => {
-    $(".customersTable").hide();
     $("#loader").show();
     customerRef.on('value', function(snapshot) {
         var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
