@@ -1,4 +1,5 @@
 <style>
+/* Button Style */
 
 /* Customer List Table Style */
 .datagrid table { border-collapse: collapse; text-align: left; width: 100%; }
@@ -21,10 +22,6 @@
     display: table-row-group;
 }
 
-#myInput {
-    margin-left: 10px;
-}
-
 #customerListContent {
     counter-reset: rowNumber-1;
 }
@@ -38,6 +35,7 @@
 }
 
 #customerListContent th:nth-child(2) {
+	width: 10%;
 }
 
 #customerListContent th:nth-child(3) {
@@ -134,12 +132,17 @@ body {
     float: left;
 }
 
-#btnCancelNewCustomer {
+#btnCancelNewCustomer, #btnCancelRepairCustomer {
     float: right;
 }
 
+.modal-body {
+	border-bottom: none;
+	padding: 0px;
+	font-size: 16px;
+}
+
 .modal-body > table tr > td:nth-child(1), .modal-body > table tr > td:nth-child(3) {
-    font-size: 16px;
     width: 18%;
 }
 
@@ -155,6 +158,7 @@ body {
     #myInput {
         margin-left: 0px;
         margin-top: 10px;
+        width: 50%;
     }
 
     #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
@@ -180,6 +184,7 @@ body {
 
     #myInput {
         margin-left: 10px;
+        width: 50%;
     }
 
     #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {
@@ -205,6 +210,7 @@ body {
 
     #myInput {
         margin-left: 10px;
+        width: 50%;
     }
 
     #customerListContent th:nth-child(4), #customerListContent th:nth-child(5) {

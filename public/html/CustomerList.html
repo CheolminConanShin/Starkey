@@ -15,10 +15,19 @@
     <div id="customerListContent" class="col-xs-12 col-md-7">
         <div class="datagrid">
             <h3>고객 리스트 (
-                <div id="customerCount"></div>명 )<input type="text" id="myInput" onkeyup="filterTable()" placeholder="검색어 입력">
+                <div id="customerCount"></div>명 )<input type="text" id="filterInput" onkeyup="filterTable()" placeholder="검색어 입력">
+                <div id="btnBuyRepair" class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-primary">
+                        <input type="radio" name="buyRepair" id="option1" autocomplete="off" value="buy"> 구매
+                    </label>
+                    <label class="btn btn-primary">
+                        <input type="radio" name="buyRepair" id="option2" autocomplete="off" value="repair"> 수리
+                    </label>
+                </div>
             </h3>
             <div class="buttonGroup">
-                <button id="btnNewCustomer" type="button" data-toggle="modal" data-target="#open" /*id="btnNewCustomer"*/ class="btn btn-primary">새 고객입력</button>
+                <button id="btnNewCustomer" type="button" data-toggle="modal" data-target="#newCustomerDialog" class="btn btn-primary">새 고객입력</button>
+                <button id="btnNewRepairCustomer" type="button" data-toggle="modal" data-target="#newRepairCustomerDialog" class="btn btn-primary">수리고객입력</button>
                 <button id="btnReadCustomer" class="btn btn-success">고객 조회</button>
                 <button id="btnLogOut" class="btn btn-danger">로그 아웃</button>
             </div>
@@ -27,6 +36,10 @@
                 <h4>데이터 불러오는 중</h4>
             </div>
             <table id="customerList" class="customersTable sortable">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+            <table id="repairCustomerList" class="customersTable sortable">
                 <thead></thead>
                 <tbody></tbody>
             </table>
@@ -78,14 +91,14 @@
     </div>
 
     <!-- New Customer Dialog -->
-    <div id="open" class="modal fade" role="dialog">
+    <div id="newCustomerDialog" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title">고객 정보</h3>
-                    <button id="btnCancelNewCustomer" class="btn btn-default" data-dismiss="modal">X</button>
+                    <button id="btnCancelNewCustomer" class="btn btn-default" data-dismiss="modal">닫기</button>
                 </div>
-                <div class="modal-body table-responsive">
+                <div class="modal-body table-responsive newCustomerForm">
                     <table class="table table-borderless">
                         <tr>
                             <td>
@@ -126,8 +139,6 @@
                             <td>
                                 <input type="text" name="batteryOrderDate" class="form-control"/>
                             </td>
-                        </tr>
-                        <tr>
                             <td>
                                 <label>복지카드 유무</label>
                             </td>
@@ -177,8 +188,64 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button id="btnAddCustomer" class="btn btn-primary" isUpdate="false">저장</button>
+                    <button id="btnAddCustomer" class="btn btn-primary">저장</button>
                     <button id="btnDeleteCustomer" class="btn btn-danger">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Customer Dialog -->
+    <div id="newRepairCustomerDialog" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">수리 고객 정보</h3>
+                    <button id="btnCancelRepairCustomer" class="btn btn-default" data-dismiss="modal">닫기</button>
+                </div>
+                <div class="modal-body table-responsive repairCustomerForm">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+                                <label>이름</label>
+                            </td>
+                            <td>
+                                <input type="text" name="customerName" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>집 번호</label>
+                            </td>
+                            <td>
+                                <input type="text" name="phoneNumber" class="form-control"/>
+                            </td>
+                            <td>
+                                <label>핸드폰 번호</label>
+                            </td>
+                            <td colspan="2">
+                                <input type="text" name="mobilePhoneNumber" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label>가입일</label>
+                            </td>
+                            <td>
+                                <input type="text" name="registrationDate" class="form-control"/>
+                            </td>
+                        </tr>
+                        <tr id="repairReportList">
+                            <td colspan="2">
+                                <label>수리내역 리스트</label>
+                                <button onclick="addNewRepairReport()" class="btn btn-primary">추가</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnAddRepairCustomer" class="btn btn-primary">저장</button>
+                    <button id="btnDeleteRepairCustomer" class="btn btn-danger">삭제</button>
                 </div>
             </div>
         </div>
