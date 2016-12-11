@@ -70,6 +70,36 @@ var btnCancelRepairCustomer = document.getElementById("btnCancelRepairCustomer")
 
 var updateCustomerId = "";
 
+let filterTable = function() {
+    let filter, tr, td, i, count, listTable;
+    filter = document.getElementById("filterInput").value;
+    listTable = $("input:radio[name='buyRepair']:checked").val() == 'buy' ? customerListTable : repairCustomerListTable;
+    tr = listTable.getElementsByTagName("tr");
+    count = 0;
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+        for (j = 0; j < 5; j++) {
+            td = tr[i].getElementsByTagName("td")[j];
+            if (td) {
+                if (td.innerHTML.indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                    count++;
+                    if(count % 10 == 0) {
+                        tr[i].className = "highlight";
+                    } else {
+                        tr[i].className = "";
+                    }
+                    break;
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    $("#customerCount")[0].innerHTML = count;
+}
+
 btnBuyRepair.change(function() {
     if(this.value == "buy") {
         btnNewCustomer.style.display = "inline";
@@ -88,6 +118,7 @@ btnBuyRepair.change(function() {
 });
 
 (function Constructor() {
+    btnBuyRepair[0].click();
     customerRef.on('value', function(snapshot) {
         var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
         customerListTableBody.innerHTML = "";
@@ -137,11 +168,9 @@ btnBuyRepair.change(function() {
                 });
             }
         });
-
         sorttable.makeSortable(customerListTable);
         $("#loader").hide();
         filterTable();
-        btnBuyRepair[0].click();
     });
 
     repairRef.on('value', function(snapshot) {
@@ -152,7 +181,7 @@ btnBuyRepair.change(function() {
             var customerData = data.val();
             bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateRepairCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
             bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
-            bodyRow.insertCell(2).innerHTML = isNull(customerData.repairReport) ? "" : customerData.repairReport[0].content;
+            bodyRow.insertCell(2).innerHTML = isNull(customerData.repairReport) ? "" : $(customerData.repairReport).last()[0].content;
             bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
             bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
         });
@@ -449,7 +478,7 @@ let deleteAidContent = function(component) {
 let deleteRepairReport = function(component) {
     let removeObject = component.parentNode.parentNode;
     removeObject.nextSibling.remove();
-    removeObject.remove()
+    removeObject.remove();
 }
 
 let addEarAid = function(side) {
@@ -482,7 +511,7 @@ let addNewRepairReport = function() {
     '<td><label>수리내역</label></td>'+
     '<td colspan="5"><textarea rows="4" colspan="4" class="form-control"></textarea></td>'+
     '</tr>'
-    return $(newRepairReport).insertAfter("#repairReportList");
+    return $(newRepairReport).insertBefore("#repairReportList");
 }
 
 let resetDialog = function() {
@@ -507,35 +536,5 @@ let resetUpdateStatus = function() {
    btnCancelNewCustomer.click();
    btnCancelRepairCustomer.click();
    updateCustomerId = "";
-}
-
-let filterTable = function() {
-    let filter, tr, td, i, count, listTable;
-    filter = document.getElementById("filterInput").value;
-    listTable = $("input:radio[name='buyRepair']:checked").val() == 'buy' ? customerListTable : repairCustomerListTable;
-    tr = listTable.getElementsByTagName("tr");
-    count = 0;
-
-    // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
-        for (j = 0; j < 5; j++) {
-            td = tr[i].getElementsByTagName("td")[j];
-            if (td) {
-                if (td.innerHTML.indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                    count++;
-                    if(count % 10 == 0) {
-                        tr[i].className = "highlight";
-                    } else {
-                        tr[i].className = "";
-                    }
-                    break;
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-    $("#customerCount")[0].innerHTML = count;    
 }
 
