@@ -88,6 +88,77 @@ btnBuyRepair.change(function() {
 });
 
 (function Constructor() {
+    customerRef.on('value', function(snapshot) {
+        var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
+        customerListTableBody.innerHTML = "";
+
+        var oneWeekTableBody = clearTableAndReturn(oneWeekTable);
+        var threeWeekTableBody = clearTableAndReturn(threeWeekTable);
+        var sevenWeekTableBody = clearTableAndReturn(sevenWeekTable);
+        var oneYearTableBody = clearTableAndReturn(oneYearTable);
+        var twoYearTableBody = clearTableAndReturn(twoYearTable);
+        var fiveYearTableBody = clearTableAndReturn(fiveYearTable);
+
+        snapshot.forEach(function(data, index) {
+            var bodyRow = customerListTableBody.insertRow(index);
+            var customerData = data.val();
+            bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+            bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
+            bodyRow.insertCell(2).innerHTML = customerData.address;
+            bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
+            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
+
+            if(!isNull(customerData.hearingAid)) {
+                customerData.hearingAid.forEach(function(hearingAidData, index) {
+                    var tableRow = null;
+
+                    // Week and Year Check
+                    if(isInNextThreeDays(weekAgo, hearingAidData.date)) {
+                        tableRow = oneWeekTableBody.insertRow(oneWeekTableBody.length);
+                    } else if(isInNextThreeDays(threeWeeksAgo, hearingAidData.date)) {
+                        tableRow = threeWeekTableBody.insertRow(threeWeekTableBody.length);
+                    } else if(isInNextThreeDays(sevenWeeksAgo, hearingAidData.date)) {
+                        tableRow = sevenWeekTableBody.insertRow(sevenWeekTableBody.length);
+                    } else if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
+                        tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
+                        tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
+                    } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
+                        tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
+                    } else {
+                        return;
+                    }
+
+                    tableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+                    tableRow.insertCell(1).innerHTML = customerData.phoneNumber;
+                    tableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
+                    tableRow.insertCell(3).innerHTML = hearingAidData.date;
+                    tableRow.insertCell(4).innerHTML = hearingAidData.model;
+                });
+            }
+        });
+
+        sorttable.makeSortable(customerListTable);
+        $("#loader").hide();
+        filterTable();
+        btnBuyRepair[0].click();
+    });
+
+    repairRef.on('value', function(snapshot) {
+        var repairCustomerListTableBody = clearTableAndReturn(repairCustomerListTable);
+
+        snapshot.forEach(function(data, index) {
+            var bodyRow = repairCustomerListTableBody.insertRow(index);
+            var customerData = data.val();
+            bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateRepairCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
+            bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
+            bodyRow.insertCell(2).innerHTML = isNull(customerData.repairReport) ? "" : customerData.repairReport[0].content;
+            bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
+            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
+        });
+        filterTable();
+    });
+
     let setTableHeader = function(table) {
         var tableHeader = table.getElementsByTagName("thead")[0];
         var tableTr = tableHeader.insertRow(0);
@@ -181,78 +252,6 @@ let clearTableAndReturn = function(table) {
     tableBody.innerHTML = "";
     return tableBody;
 }
-
-btnReadCustomer.addEventListener('click', e => {
-    $("#loader").show();
-    customerRef.on('value', function(snapshot) {
-        var customerListTableBody = customerListTable.getElementsByTagName("tbody")[0];
-        customerListTableBody.innerHTML = "";
-
-        var oneWeekTableBody = clearTableAndReturn(oneWeekTable);
-        var threeWeekTableBody = clearTableAndReturn(threeWeekTable);
-        var sevenWeekTableBody = clearTableAndReturn(sevenWeekTable);
-        var oneYearTableBody = clearTableAndReturn(oneYearTable);
-        var twoYearTableBody = clearTableAndReturn(twoYearTable);
-        var fiveYearTableBody = clearTableAndReturn(fiveYearTable);
-
-        snapshot.forEach(function(data, index) {
-            var bodyRow = customerListTableBody.insertRow(index);
-            var customerData = data.val();
-            bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
-            bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
-            bodyRow.insertCell(2).innerHTML = customerData.address;
-            bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
-            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
-
-            if(!isNull(customerData.hearingAid)) {
-                customerData.hearingAid.forEach(function(hearingAidData, index) {
-                    var tableRow = null;
-
-                    // Week and Year Check 
-                    if(isInNextThreeDays(weekAgo, hearingAidData.date)) {
-                        tableRow = oneWeekTableBody.insertRow(oneWeekTableBody.length);
-                    } else if(isInNextThreeDays(threeWeeksAgo, hearingAidData.date)) {
-                        tableRow = threeWeekTableBody.insertRow(threeWeekTableBody.length);
-                    } else if(isInNextThreeDays(sevenWeeksAgo, hearingAidData.date)) {
-                        tableRow = sevenWeekTableBody.insertRow(sevenWeekTableBody.length);
-                    } else if(isEqualYearAndMonth(before1YearDate, hearingAidData.date)) {
-                        tableRow = oneYearTableBody.insertRow(oneYearTableBody.length);
-                    } else if(isEqualYearAndMonth(before2YearDate, hearingAidData.date)) {
-                        tableRow = twoYearTableBody.insertRow(twoYearTableBody.length);
-                    } else if(isEqualYearAndMonth(before5YearDate, hearingAidData.date)) {
-                        tableRow = fiveYearTableBody.insertRow(fiveYearTableBody.length);
-                    } else {
-                        return;
-                    }
-
-                    tableRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
-                    tableRow.insertCell(1).innerHTML = customerData.phoneNumber;
-                    tableRow.insertCell(2).innerHTML = customerData.mobilePhoneNumber;
-                    tableRow.insertCell(3).innerHTML = hearingAidData.date;
-                    tableRow.insertCell(4).innerHTML = hearingAidData.model;
-                });
-            }
-        });
-        
-        sorttable.makeSortable(customerListTable);
-        $("#loader").hide();
-        btnBuyRepair[0].click();
-    });
-
-    repairRef.on('value', function(snapshot) {
-        var repairCustomerListTableBody = clearTableAndReturn(repairCustomerListTable);
-
-        snapshot.forEach(function(data, index) {
-            var bodyRow = repairCustomerListTableBody.insertRow(index);
-            var customerData = data.val();
-            bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateRepairCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
-            bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
-            bodyRow.insertCell(2).innerHTML = isNull(customerData.repairReport) ? "" : customerData.repairReport[0].content;
-            bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
-            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
-        });
-    });
-});
 
 btnLogOut.addEventListener('click', e => {
     const promise = firebase.auth().signOut();
@@ -444,7 +443,13 @@ let updateRepairCustomer = function(customerId) {
 }
 
 let deleteAidContent = function(component) {
-    component.parentNode.parentNode.remove()
+    component.parentNode.parentNode.remove();
+}
+
+let deleteRepairReport = function(component) {
+    let removeObject = component.parentNode.parentNode;
+    removeObject.nextSibling.remove();
+    removeObject.remove()
 }
 
 let addEarAid = function(side) {
@@ -471,6 +476,7 @@ let addNewRepairReport = function() {
     '<tr class="repairReportTag">'+
     '<td><label>수리일</label></td>'+
     '<td><input type="text" name="repairDate" class="form-control" value="'+currentDate+'"/></td>'+
+    '<td><button class="btn btn-default" onclick="deleteRepairReport(this)">X</button></td>'+
     '</tr>'+
     '<tr class="repairReportTag">'+
     '<td><label>수리내역</label></td>'+
@@ -533,4 +539,3 @@ let filterTable = function() {
     $("#customerCount")[0].innerHTML = count;    
 }
 
-btnReadCustomer.click();
