@@ -136,8 +136,8 @@ btnBuyRepair.change(function() {
             bodyRow.insertCell(0).innerHTML = '<a href="#" onclick="updateCustomer(\'' + data.key + '\')">'+customerData.name+'</a>';
             bodyRow.insertCell(1).innerHTML = customerData.registrationDate;
             bodyRow.insertCell(2).innerHTML = customerData.address;
-            bodyRow.insertCell(3).innerHTML = customerData.phoneNumber;
-            bodyRow.insertCell(4).innerHTML = customerData.mobilePhoneNumber;
+            bodyRow.insertCell(3).innerHTML = '<a href="tel:' + customerData.phoneNumber + '">' + customerData.phoneNumber + '</a>';
+            bodyRow.insertCell(4).innerHTML = '<a href="tel:' + customerData.mobilePhoneNumber + '">' + customerData.mobilePhoneNumber + '</a>';
 
             if(!isNull(customerData.hearingAid)) {
                 customerData.hearingAid.forEach(function(hearingAidData, index) {
